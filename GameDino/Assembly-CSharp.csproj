@@ -62,10 +62,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\DinoScript.cs" />
-    <Compile Include="Assets\Scripts\GameController.cs" />
+    <Compile Include="Assets\Scripts\GameControllerScript.cs" />
+    <Compile Include="Assets\Scripts\MoveLeftCycle.cs" />
+    <Compile Include="Assets\Scripts\ObstaclesScript.cs" />
     <Compile Include="Assets\Scripts\ScrollBG.cs" />
-    <Compile Include="Assets\Scripts\Spawner.cs" />
-    <Compile Include="Assets\Scripts\TreeScript.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/GitHub/tcodeunityk1/GameDino/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>

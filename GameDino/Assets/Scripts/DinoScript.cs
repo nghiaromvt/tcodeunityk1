@@ -1,42 +1,43 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DinoScript : MonoBehaviour {
-    public float JumpForce=300f;
     private Rigidbody2D myBody;
-    public Text gameOver; 
-	// Use this for initialization
+    private bool grounded=true;
+    [SerializeField]
+    private float jumpForce = 300f;
 	void Start () {
         myBody = GetComponent<Rigidbody2D>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		if(Input.GetKeyDown(KeyCode.Space))
         {
-            myBody.AddForce(new Vector2(0,JumpForce),ForceMode2D.Force);
+            isGrounded();
         }
 	}
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    private void isGrounded()
     {
-        if(collision.CompareTag("Tree"))
+        if(grounded)
         {
-            Time.timeScale = 0;
-            gameOver.gameObject.SetActive(true);
+            Jump();
+            grounded = false;
         }
     }
-    public void Replay()
+
+    private void Jump()
     {
-        GameObject[] trees;
-        trees=GameObject.FindGameObjectsWithTag("Tree");
-        foreach (GameObject tree in trees)
+        myBody.AddForce(new Vector2(0,jumpForce),ForceMode2D.Force);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Ground"))
         {
-            Destroy(tree.gameObject);
+            grounded = true;
         }
-        Time.timeScale = 1;
-        gameOver.gameObject.SetActive(false);
     }
 }
-

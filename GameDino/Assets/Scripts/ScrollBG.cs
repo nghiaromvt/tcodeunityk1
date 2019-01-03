@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ScrollBG : MonoBehaviour {
-    public float Speed = 0.2f;
+    [SerializeField]
+    private float Speed = 0.2f;
     private MeshRenderer render;
     private Vector2 offsetDefault;
 	// Use this for initialization
@@ -14,8 +15,7 @@ public class ScrollBG : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-            float x = Mathf.Repeat(Time.time * Speed, 1);
+            float x = Mathf.Repeat(Time.time * Speed/transform.localScale.x, 1);
             Vector2 newOffset = new Vector2(x, offsetDefault.y);
             render.sharedMaterial.SetTextureOffset("_MainTex", newOffset);
     }
