@@ -5,32 +5,27 @@ using UnityEngine;
 
 public class DinoScript : MonoBehaviour {
     private Rigidbody2D myBody;
-    private bool grounded=true;
+    private bool grounded;
     [SerializeField]
     private float jumpForce = 300f;
 	void Start () {
         myBody = GetComponent<Rigidbody2D>();
 	}
 	
-	void FixedUpdate () {
+	void Update () {
 		if(Input.GetKeyDown(KeyCode.Space))
         {
-            isGrounded();
+            Jump();
         }
 	}
 
-    private void isGrounded()
+    private void Jump()
     {
         if(grounded)
         {
-            Jump();
+            myBody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Force);
             grounded = false;
         }
-    }
-
-    private void Jump()
-    {
-        myBody.AddForce(new Vector2(0,jumpForce),ForceMode2D.Force);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

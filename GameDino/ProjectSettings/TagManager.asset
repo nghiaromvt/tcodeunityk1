@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Tree
   - Ground
+  - KillPoint
+  - Coin
   layers:
   - Default
   - TransparentFX

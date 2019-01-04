@@ -9,17 +9,19 @@ public class ObstaclesScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         transform.position = new Vector2(transform.position.x - moveSpeed * Time.deltaTime,
-            transform.position.y);
-        if(transform.position.x<-13f)
-        {
-            Destroy(gameObject);
-        }
+            transform.position.y);       
 	}
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Player"))
         {
-            GameControllerScript.instance.DinoHit();
+            GameControllerScript.instance.DinoHit(gameObject.name);
+        }
+        if(collision.CompareTag("KillPoint"))
+        {
+            GameControllerScript.instance.CountObstacle();
+            Destroy(gameObject);
         }
     }
+
 }

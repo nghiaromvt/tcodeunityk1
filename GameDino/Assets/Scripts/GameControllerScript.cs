@@ -16,25 +16,26 @@ public class GameControllerScript : MonoBehaviour {
     private Text yourScoreText;
 
     [SerializeField]
+    private Text coinText;
+
+    [SerializeField]
     private GameObject[] obstacles;
 
     [SerializeField]
     private Transform spawnPoint;
 
     [SerializeField]
-    private float spawnRate = 2f;
-    private float nextSpawn;
+    private int nextBoost = 10;
+    private int obstacleCount=0;
 
-    [SerializeField]
-    private float timeToBoost = 5f;
-    float nextBoost;
-
-    int highScore = 0, yourScore = 0;
+    private int highScore = 0, yourScore = 0;
 
     public static bool gameStopped;
     private bool gameStart=false;
 
     float nextScoreIncrease = 0f;
+
+    private int coinCount = 0;
 
     private void Start()
     {
@@ -47,8 +48,6 @@ public class GameControllerScript : MonoBehaviour {
         yourScore = 0;
         gameStopped = true;
         Time.timeScale = 0f;
-        nextSpawn = Time.time + spawnRate;
-        nextBoost = Time.unscaledTime + timeToBoost;
         highScore = PlayerPrefs.GetInt("highScore");
     }
 
@@ -56,26 +55,44 @@ public class GameControllerScript : MonoBehaviour {
     {
         if(Input.GetKeyDown(KeyCode.Space)&&!gameStart)
         {
-            gameStart = true;
-            gameStopped = false;
-            Time.timeScale = 1f;
+            StartGame();
         }
-        if(!gameStopped)
+        if (!gameStopped)
             IncreaseYourScore();
 
         highScoreText.text = "HI     " + highScore;
         yourScoreText.text = "" + yourScore;
+        coinText.text = "COIN " + coinCount;
 
-        if (Time.time > nextSpawn)
-            SpawnObstacle();
-
-        if (Time.unscaledTime > nextBoost && !gameStopped)
+        if (obstacleCount >= nextBoost)
+        {
             BoostTime();
+        }
     }
 
-    public void DinoHit()
+    private void StartGame()
     {
-        if(yourScore>highScore)
+        gameStart = true;
+        gameStopped = false;
+        Time.timeScale = 1f;
+        StartCoroutine(SpawnObstacle());
+    }
+
+    public void DinoHit(string name)
+    {
+        if (name == "Coin")
+        {
+            coinCount++;
+        }
+        else
+        {
+            GameOver();
+        }
+    }
+
+    private void GameOver()
+    {
+        if (yourScore > highScore)
         {
             PlayerPrefs.SetInt("highScore", yourScore);
         }
@@ -84,17 +101,19 @@ public class GameControllerScript : MonoBehaviour {
         restartButton.SetActive(true);
     }
 
-    void SpawnObstacle()
+    IEnumerator SpawnObstacle()
     {
-        nextSpawn = Time.time + spawnRate;
+        yield return new WaitForSeconds(Random.Range(1, 3));
         int randomObstacle = Random.Range(0, obstacles.Length);
         Instantiate(obstacles[randomObstacle], spawnPoint.position, Quaternion.identity);
+        StartCoroutine(SpawnObstacle());
     }
 
     void BoostTime()
     {
-        nextBoost = Time.unscaledTime + timeToBoost;
-        Time.timeScale += 0.25f;
+        Time.timeScale += 0.05f;
+        obstacleCount = 0;
+        Debug.Log(Time.timeScale);
     }
 
     void IncreaseYourScore()
@@ -109,5 +128,10 @@ public class GameControllerScript : MonoBehaviour {
     public void RestartGame()
     {
         SceneManager.LoadScene("SampleScene");
+    }
+
+    public void CountObstacle()
+    {
+            obstacleCount++;
     }
 }
